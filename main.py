@@ -317,7 +317,7 @@ class PopupDialog(QDialog):
 
         # Customize the graph for smaller display
         ax.set_title("Monthly Status Distribution", fontsize=6)  # Smaller font for title
-        ax.set_xlabel("Status", fontsize=6)  # Smaller font for x-axis label
+        ax.set_xlabel("Status", fontsize=5)  # Smaller font for x-axis label
         ax.set_ylabel("Count", fontsize=5)  # Smaller font for y-axis label
         ax.tick_params(axis="both", which="major", labelsize=6)  # Smaller tick labels
         ax.legend(fontsize=6)  # Smaller legend text
