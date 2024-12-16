@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>977</width>
+    <width>997</width>
     <height>798</height>
    </rect>
   </property>
@@ -135,7 +135,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>16</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page">
       <layout class="QGridLayout" name="gridLayout_2">
@@ -2719,10 +2719,10 @@ color: rgb(255, 255, 255);
              <set>QAbstractItemView::NoEditTriggers</set>
             </property>
             <property name="showGrid">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="gridStyle">
-             <enum>Qt::NoPen</enum>
+             <enum>Qt::SolidLine</enum>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -3113,10 +3113,10 @@ color: rgb(255, 255, 255);
               <set>QAbstractItemView::NoEditTriggers</set>
              </property>
              <property name="showGrid">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="gridStyle">
-              <enum>Qt::NoPen</enum>
+              <enum>Qt::SolidLine</enum>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -3402,10 +3402,10 @@ color: rgb(255, 255, 255);
               <set>QAbstractItemView::NoEditTriggers</set>
              </property>
              <property name="showGrid">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="gridStyle">
-              <enum>Qt::NoPen</enum>
+              <enum>Qt::SolidLine</enum>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -3724,10 +3724,10 @@ color: rgb(255, 255, 255);
               <set>QAbstractItemView::NoEditTriggers</set>
              </property>
              <property name="showGrid">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="gridStyle">
-              <enum>Qt::NoPen</enum>
+              <enum>Qt::SolidLine</enum>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -4058,10 +4058,10 @@ color: rgb(255, 255, 255);
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
          <property name="showGrid">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="gridStyle">
-          <enum>Qt::NoPen</enum>
+          <enum>Qt::SolidLine</enum>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -4313,10 +4313,10 @@ color: rgb(255, 255, 255);
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
          <property name="showGrid">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="gridStyle">
-          <enum>Qt::NoPen</enum>
+          <enum>Qt::SolidLine</enum>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -11909,7 +11909,7 @@ color: rgb(255, 255, 255);
           <bool>false</bool>
          </property>
          <property name="gridStyle">
-          <enum>Qt::NoPen</enum>
+          <enum>Qt::SolidLine</enum>
          </property>
          <property name="wordWrap">
           <bool>false</bool>
