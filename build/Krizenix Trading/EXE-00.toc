@@ -1,9 +1,9 @@
-('C:\\Users\\joelj\\OneDrive\\Desktop\\KrizenixTrading\\build\\Krizenix '
+('C:\\Users\\joelj\\OneDrive\\Desktop\\krizenixtrading\\build\\Krizenix '
  'Trading\\Krizenix Trading.exe',
  False,
  False,
  True,
- ['C:\\Users\\joelj\\OneDrive\\Desktop\\KrizenixTrading\\images/KSX_LOGO.ico'],
+ ['C:\\Users\\joelj\\OneDrive\\Desktop\\krizenixtrading\\images/KSX_LOGO.ico'],
  None,
  False,
  False,
@@ -30,31 +30,31 @@
  None,
  None,
  None,
- 'C:\\Users\\joelj\\OneDrive\\Desktop\\KrizenixTrading\\build\\Krizenix '
+ 'C:\\Users\\joelj\\OneDrive\\Desktop\\krizenixtrading\\build\\Krizenix '
  'Trading\\Krizenix Trading.pkg',
  [('pyi-contents-directory _internal', '', 'OPTION'),
   ('PYZ-00.pyz',
-   'C:\\Users\\joelj\\OneDrive\\Desktop\\KrizenixTrading\\build\\Krizenix '
+   'C:\\Users\\joelj\\OneDrive\\Desktop\\krizenixtrading\\build\\Krizenix '
    'Trading\\PYZ-00.pyz',
    'PYZ'),
   ('struct',
-   'C:\\Users\\joelj\\OneDrive\\Desktop\\KrizenixTrading\\build\\Krizenix '
+   'C:\\Users\\joelj\\OneDrive\\Desktop\\krizenixtrading\\build\\Krizenix '
    'Trading\\localpycs\\struct.pyc',
    'PYMODULE'),
   ('pyimod01_archive',
-   'C:\\Users\\joelj\\OneDrive\\Desktop\\KrizenixTrading\\build\\Krizenix '
+   'C:\\Users\\joelj\\OneDrive\\Desktop\\krizenixtrading\\build\\Krizenix '
    'Trading\\localpycs\\pyimod01_archive.pyc',
    'PYMODULE'),
   ('pyimod02_importers',
-   'C:\\Users\\joelj\\OneDrive\\Desktop\\KrizenixTrading\\build\\Krizenix '
+   'C:\\Users\\joelj\\OneDrive\\Desktop\\krizenixtrading\\build\\Krizenix '
    'Trading\\localpycs\\pyimod02_importers.pyc',
    'PYMODULE'),
   ('pyimod03_ctypes',
-   'C:\\Users\\joelj\\OneDrive\\Desktop\\KrizenixTrading\\build\\Krizenix '
+   'C:\\Users\\joelj\\OneDrive\\Desktop\\krizenixtrading\\build\\Krizenix '
    'Trading\\localpycs\\pyimod03_ctypes.pyc',
    'PYMODULE'),
   ('pyimod04_pywin32',
-   'C:\\Users\\joelj\\OneDrive\\Desktop\\KrizenixTrading\\build\\Krizenix '
+   'C:\\Users\\joelj\\OneDrive\\Desktop\\krizenixtrading\\build\\Krizenix '
    'Trading\\localpycs\\pyimod04_pywin32.pyc',
    'PYMODULE'),
   ('pyiboot01_bootstrap',
@@ -87,7 +87,7 @@
  [],
  False,
  False,
- 1734174609,
+ 1734438307,
  [('runw.exe',
    'C:\\Python312\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\runw.exe',
    'EXECUTABLE')],
