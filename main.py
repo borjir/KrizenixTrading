@@ -314,8 +314,8 @@ class PopupDialog(QDialog):
 
         # Customize the graph for smaller display
         ax.set_title("Monthly Status Distribution", fontsize=6)  # Smaller font for title
-        ax.set_xlabel("Status", fontsize=5)  # Smaller font for x-axis label
-        ax.set_ylabel("Count", fontsize=5)  # Smaller font for y-axis label
+        ax.set_xlabel("", fontsize=5)  # Smaller font for x-axis label
+        ax.set_ylabel("", fontsize=5)  # Smaller font for y-axis label
         ax.tick_params(axis="both", which="major", labelsize=6)  # Smaller tick labels
         ax.legend(fontsize=6)  # Smaller legend text
         ax.grid(True, linewidth=0.5)  # Thinner grid lines
@@ -875,13 +875,22 @@ class PopupDialog(QDialog):
 
     def generate_unique_filename(self):
         """
-        Generate a unique file name using the current date and time.
-        For example, Report (19-12-2024 00-35-32).pdf.
+        Generate a unique file name using the current date.
+        For example, Report1 (19-12-2024).pdf, Report2 (19-12-2024).pdf.
         """
-        current_datetime = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-        file_name = f"Report ({current_datetime}).pdf"
-        file_path = os.path.join(self.pdf_save_directory, file_name)
-        return file_name if not os.path.exists(file_path) else self.generate_unique_filename()
+        current_date = datetime.now().strftime("%d-%m-%Y")
+        counter = 1
+
+        while True:
+            # Construct the file name with the current counter and date
+            file_name = f"Report{counter} ({current_date}).pdf"
+            file_path = os.path.join(self.pdf_save_directory, file_name)
+
+            # Check if a file with the same name already exists
+            if not os.path.exists(file_path):
+                return file_name  # Return the first available unique file name
+
+            counter += 1  # Increment the counter if the file already exists
 
     def convert_to_pdf(self):
         """
