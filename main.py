@@ -240,7 +240,9 @@ class PopupDialog(QDialog):
         self.choose_delete_categoryBox.currentTextChanged.connect(self.load_items_for_category)
         # Load create list categories and names\
         # Populate combo boxes
-
+        self.update_category_box()
+        self.update_item_box_based_on_category()
+        self.load_hardware_names_for_list()
 
         self.hardware_insert_categoryBox.currentTextChanged.connect(self.load_items_based_on_category)
         self.hardware_insert_itemBox.currentTextChanged.connect(self.load_hardwares_based_on_item)
@@ -664,12 +666,9 @@ class PopupDialog(QDialog):
         # Open a new instance of the dialog
         new_dialog = PopupDialog(self.parent())
         new_dialog.setFixedSize(1000, 600)
+        new_dialog.list_stackedWidget.setCurrentIndex(0)
         new_dialog.average_data_list_btn.setChecked(True)
         new_dialog.stackedWidget.setCurrentIndex(8)
-        new_dialog.list_stackedWidget.setCurrentIndex(0)
-        new_dialog.update_category_box()
-        new_dialog.update_item_box_based_on_category()
-        new_dialog.load_hardware_names_for_list()
 
         # Fetch total prices
         total_prices_by_hardware = supply_management_function.fetch_total_item_prices_by_hardware(GlobalState.temp_list)
