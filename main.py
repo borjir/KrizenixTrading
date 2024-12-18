@@ -47,9 +47,11 @@ class PopupDialog(QDialog):
             self.setFixedSize(600, 550)
         if GlobalState.num == 1:
             self.stackedWidget.setCurrentIndex(1)
+            self.populate_hardware_names()
             self.setFixedSize(600, 750)
         if GlobalState.num == 2:
             self.stackedWidget.setCurrentIndex(2)
+            self.load_hardware_names()
             self.setFixedSize(550, 400)
         if GlobalState.num == 3:
             self.stackedWidget.setCurrentIndex(3)
@@ -61,6 +63,7 @@ class PopupDialog(QDialog):
         #     self.stackedWidget.setCurrentIndex(5)
         if GlobalState.num == 6:
             self.stackedWidget.setCurrentIndex(6)
+            self.load_categories()
             GlobalState.temp_list = []
             self.setFixedSize(700,700)
         if GlobalState.num == 9:
@@ -101,6 +104,7 @@ class PopupDialog(QDialog):
             self.stackedWidget.setCurrentIndex(11)
             self.setFixedSize(780, 800)
         if GlobalState.num == 13:
+            self.load_client_names()
             self.stackedWidget.setCurrentIndex(13)
             self.setFixedSize(550, 400)
         if GlobalState.num == 14:
@@ -232,20 +236,14 @@ class PopupDialog(QDialog):
 
         self.load_directory()  # Load saved directory when the program starts
 
-        # Load hardware names into the combobox
-        self.populate_hardware_names()
-        self.load_hardware_names()
+        # Load hardware names into the combobox\
         self.choose_delete_categoryBox.currentTextChanged.connect(self.load_items_for_category)
-        # Load create list categories and names
-        self.load_categories()
-
+        # Load create list categories and names\
         # Populate combo boxes
-        self.update_category_box()
-        self.update_item_box_based_on_category()
-        self.load_client_names()
+
+
         self.hardware_insert_categoryBox.currentTextChanged.connect(self.load_items_based_on_category)
         self.hardware_insert_itemBox.currentTextChanged.connect(self.load_hardwares_based_on_item)
-        self.add_item_hardware_confirm_btn.clicked.connect(self.add_item_hardware_confirm)
         self.choose_delete_categoryBox.currentTextChanged.connect(self.load_items_for_category)
         self.choose_delete_itemBox.currentTextChanged.connect(self.load_hardware_for_deletion)
 
@@ -253,7 +251,6 @@ class PopupDialog(QDialog):
         # Connect signals
         self.list_data_categoryBox.currentTextChanged.connect(self.update_item_box_based_on_category)
         self.list_data_itemBox.currentTextChanged.connect(self.item_list_data_page)
-        self.load_hardware_names_for_list()
         self.item_data_hardwareBox.currentTextChanged.connect(self.hardware_list_data_page)
 
         self.initialize_date_comboboxes("bp_choose_month_comboBox", "bp_choose_day_comboBox", "bp_choose_year_comboBox")
@@ -338,7 +335,9 @@ class PopupDialog(QDialog):
         # Implement your confirm logic
         n = supply_management_function.insert_hardware_data(self)
         if n == 0:
-            self.close()  # Close dialog
+            self.hardware_name_lineEdit.clear()
+            self.hardware_location_lineEdit.clear()
+            self.hardware_contactInfo_lineEdit.clear()
 
     def add_hardware_cancel(self):
         # Implement your cancel logic here
@@ -349,8 +348,7 @@ class PopupDialog(QDialog):
         """Delete hardware by calling the function in supply_management_function.py."""
         n = supply_management_function.delete_hardware_data(self)
         if n == 0:
-            self.load_hardware_names()  # Refresh combobox after deleting
-            self.close()
+            self.load_hardware_names()  # Refresh combobox after deleting\
 
     def delete_hardware_cancel(self):
         self.close()
@@ -434,12 +432,19 @@ class PopupDialog(QDialog):
             else:
                 self.choose_hardware_delete_hardwareBox.addItem("No hardware available")
     def add_item_hardware_proceed(self):
+        self.load_categories_for_hardware_insert()
+        self.load_items_based_on_category()
+        self.load_hardwares_based_on_item()
+        QMessageBox.information(self,"Loading","Loading data.....")
         self.stackedWidget.setCurrentIndex(18)
 
     def add_item_hardware_confirm(self):
         result = supply_management_function.insert_existing_item_with_hardware(self)
         if result == 0:
-            self.close()
+            self.load_categories_for_hardware_insert()
+            self.load_items_based_on_category()
+            self.load_hardwares_based_on_item()
+            self.hardware_itemPrice_lineEdit.clear()
     def add_item_hardware_cancel(self):
         self.close()
     def add_item_hardware_back(self):
@@ -447,7 +452,8 @@ class PopupDialog(QDialog):
     def add_item_confirm(self):
         n = supply_management_function.insert_item_data(self)
         if n == 0:
-            self.close()
+            self.itemName_lineEdit.clear()
+            self.itemPrice_lineEdit.clear()
 
     def add_item_cancel(self):
         self.close()
@@ -468,7 +474,6 @@ class PopupDialog(QDialog):
         if result == 0:
             self.load_items_for_category()  # Refresh items for the category
             self.load_hardware_for_deletion()  # Refresh hardware options
-            self.close()
 
     def delete_item_cancel(self):
         self.close()
@@ -662,6 +667,9 @@ class PopupDialog(QDialog):
         new_dialog.average_data_list_btn.setChecked(True)
         new_dialog.stackedWidget.setCurrentIndex(8)
         new_dialog.list_stackedWidget.setCurrentIndex(0)
+        new_dialog.update_category_box()
+        new_dialog.update_item_box_based_on_category()
+        new_dialog.load_hardware_names_for_list()
 
         # Fetch total prices
         total_prices_by_hardware = supply_management_function.fetch_total_item_prices_by_hardware(GlobalState.temp_list)
@@ -867,18 +875,13 @@ class PopupDialog(QDialog):
 
     def generate_unique_filename(self):
         """
-        Generate a unique file name (e.g., Report1.pdf, Report2.pdf) to avoid overwriting.
+        Generate a unique file name using the current date and time.
+        For example, Report (19-12-2024 00-35-32).pdf.
         """
-        base_name = "Report"
-        extension = ".pdf"
-        counter = 1
-        while True:
-            # Construct the file name
-            file_name = f"{base_name}{counter}{extension}"
-            file_path = os.path.join(self.pdf_save_directory, file_name)
-            if not os.path.exists(file_path):
-                return file_name  # Return the first available unique file name
-            counter += 1  # Increment the counter and try again
+        current_datetime = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        file_name = f"Report ({current_datetime}).pdf"
+        file_path = os.path.join(self.pdf_save_directory, file_name)
+        return file_name if not os.path.exists(file_path) else self.generate_unique_filename()
 
     def convert_to_pdf(self):
         """
@@ -1581,9 +1584,6 @@ class PopupDialog(QDialog):
             if success:
                 QMessageBox.information(self, "Success", f"Client '{selected_client}' has been deleted.")
                 self.load_client_names()  # Refresh the client list
-                self.close()
-            else:
-                QMessageBox.critical(self, "Error", f"Failed to delete client '{selected_client}'.")
 
     def delete_client_cancel(self):
         self.close()
