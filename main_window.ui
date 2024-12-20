@@ -612,7 +612,7 @@ background-color: #8FDBCD;
    <item row="2" column="1">
     <widget class="QStackedWidget" name="main_stackedWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="page">
       <layout class="QGridLayout" name="gridLayout_2">
@@ -2600,13 +2600,13 @@ font-size: 9.5pt;
               <widget class="QComboBox" name="paymentTypeBox">
                <property name="minimumSize">
                 <size>
-                 <width>225</width>
+                 <width>240</width>
                  <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>225</width>
+                 <width>240</width>
                  <height>30</height>
                 </size>
                </property>

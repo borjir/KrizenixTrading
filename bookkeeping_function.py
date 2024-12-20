@@ -374,6 +374,18 @@ def fetch_client_data_for_action(client_id, payment_type):
         print(f"Error fetching client data for action: {e}")
         return None
 
+def fetch_client_data_for_action_dashboard(client_name, payment_type):
+    """
+    Fetches client data for the given client_id and payment_type.
+    """
+    try:
+        collection = Database.get_collection("myDB", "client")
+        query = {"client_name": client_name, "payment_type": payment_type}
+        projection = {"_id": 0, "payment_type": 1, "status": 1}
+        return collection.find_one(query, projection)
+    except Exception as e:
+        print(f"Error fetching client data for action: {e}")
+        return None
 
 def update_client_status(client_id, payment_type, new_status):
     """
@@ -397,6 +409,27 @@ def update_client_status(client_id, payment_type, new_status):
         print(f"Error updating client status: {e}")
         return False
 
+def update_client_status_dashboard(client_name, payment_type, new_status):
+    """
+    Updates the status of a specific payment type for the given client_id and sets client_updated_at.
+    """
+    try:
+        collection = Database.get_collection("myDB", "client")
+
+        # Update the status and set the current date/time for client_updated_at
+        result = collection.update_one(
+            {"client_name": client_name, "payment_type": payment_type},
+            {"$set": {"status": new_status, "client_updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}}
+        )
+
+        # Clear the cache after updating
+        bookkeeping_data_cache.clear()
+
+        # Return True if the update modified a document
+        return result.modified_count > 0
+    except Exception as e:
+        print(f"Error updating client status: {e}")
+        return False
 
 def fetch_unique_client_names():
     """
@@ -485,48 +518,7 @@ def delete_payment_types(client_name, payment_types):
         print(f"Error deleting payment types: {e}")
         return False
 
-def update_or_insert_dti_data(client_name, business_name, contact_info, payment_date):
-    """
-    Updates or inserts DTI data for the given client.
-    """
-    print("huh")
-    try:
-        collection = Database.get_collection("myDB", "client")
 
-        # Check if DTI data already exists
-        existing_dti = collection.find_one({"client_name": client_name, "payment_type": "DTI"})
-
-        if existing_dti:
-            # Update existing DTI data
-            result = collection.update_one(
-                {"client_name": client_name, "payment_type": "DTI"},
-                {"$set": {"payment_date": payment_date}}
-            )
-            return result.modified_count > 0
-        else:
-            # Fetch client_id
-            client_id = collection.find_one({"client_name": client_name}, {"client_id": 1, "_id": 0})
-            if client_id is None:
-                print("Failed to fetch client_id for DTI insertion.")
-                return False
-
-            # Insert new DTI data
-            dti_data = {
-                "client_id": client_id["client_id"],
-                "client_name": client_name,
-                "business_name": business_name,
-                "contact_info": contact_info,
-                "payment_type": "DTI",
-                "status": "TO BE RECEIVED",
-                "payment_date": payment_date,
-                "client_added_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            }
-            collection.insert_one(dti_data)
-            return True
-
-    except Exception as e:
-        print(f"Error updating or inserting DTI data: {e}")
-        return False
 
 def update_or_insert_payment_type(client_name, business_name, contact_info, payment_date, payment_type):
     """
@@ -537,11 +529,28 @@ def update_or_insert_payment_type(client_name, business_name, contact_info, paym
         collection = Database.get_collection("myDB", "client")
         today = datetime.now().date()
 
+        existing_payment_status = collection.find_one({"client_name": client_name, "payment_type": payment_type})
+        current_status = ""
+        if existing_payment_status:
+            # Extract current status and payment_date from the existing record
+            current_status = existing_payment_status.get("status")
+
         # Convert payment_date to a date object
         payment_date_obj = datetime.strptime(payment_date, "%Y-%m-%d").date()
 
-        # If the payment_date is today, update the status
-        status = "DEADLINE TO PAY" if payment_date_obj == today else "TO BE RECEIVED"
+        if payment_date_obj == today and current_status != "COMPLETED":
+            status = "DEADLINE TO PAY"
+        elif current_status == "COMPLETED":
+            status = "COMPLETED"
+        elif payment_date_obj > today and current_status == "TO BE RECEIVED":
+            status = "TO BE RECEIVED"
+        elif payment_date_obj > today and current_status == "PENDING":
+            status = "PENDING"
+        elif payment_date_obj < today and current_status == "OVERDUE":
+            status = "OVERDUE"
+        else:
+            status = "TO BE RECEIVED"
+
 
         # Check if the payment type data already exists
         existing_payment = collection.find_one({"client_name": client_name, "payment_type": payment_type})

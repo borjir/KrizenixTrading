@@ -243,17 +243,18 @@ def fetch_items_for_category(category):
         print(f"Error fetching items for category '{category}': {e}")
         return []
 
+
 def fetch_average_item_prices_by_hardware(temp_list):
     try:
         collection = Database.get_collection("myDB", "item")
 
         # Map quantities from temp_list
         qty_map = {item["item_name"]: item["quantity"] for item in temp_list}
+        required_items = {item["item_name"] for item in temp_list}
 
         # Fetch items matching temp_list categories and names
         items = list(collection.find({
-            "category": {"$in": [item["category"] for item in temp_list]},
-            "item_name": {"$in": [item["item_name"] for item in temp_list]}
+            "item_name": {"$in": list(required_items)}
         }, {
             "_id": 0,
             "item_price": 1,
@@ -263,7 +264,7 @@ def fetch_average_item_prices_by_hardware(temp_list):
             "hardware_contactInfo": 1
         }))
 
-        # Group items by hardware and calculate averages and counts
+        # Group items by hardware and calculate costs
         hardware_data = {}
         for item in items:
             hardware_name = item["hardware_name"]
@@ -281,28 +282,31 @@ def fetch_average_item_prices_by_hardware(temp_list):
             hardware_data[hardware_name]["total_price"] += total_price
             hardware_data[hardware_name]["unique_items"].add(item["item_name"])
 
-        # Compute averages for each hardware
-        result = []
-        for hardware_name, data in hardware_data.items():
-            average_price = (data["total_price"] / len(data["unique_items"])) if data["unique_items"] else 0
-            result.append({
-                "hardware_name": hardware_name,
+        # Separate hardware into full and partial matches
+        full_matches = []
+        partial_matches = []
+
+        for name, data in hardware_data.items():
+            match_data = {
+                "hardware_name": name,
                 "total_price": data["total_price"],
-                "average_price": average_price,
+                "average_price": (data["total_price"] / len(data["unique_items"])) if data["unique_items"] else 0,
                 "unique_item_count": len(data["unique_items"]),
                 "hardware_location": data["hardware_location"],
-                "hardware_contactInfo": data["hardware_contactInfo"]
-            })
+                "hardware_contactInfo": data["hardware_contactInfo"],
+                "matched_items": data["unique_items"]
+            }
 
-        return result
+            if required_items.issubset(data["unique_items"]):
+                full_matches.append(match_data)
+            else:
+                partial_matches.append(match_data)
+
+        return full_matches, partial_matches
 
     except Exception as e:
         print(f"Error fetching average item prices by hardware: {e}")
-        return []
-
-
-
-
+        return [], []
 
 
 def fetch_sorted_items(temp_list, selected_category=None, selected_item=None):

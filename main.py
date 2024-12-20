@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QFileDialog, QApplication, QWidget, QLabel, QFrame, QHBoxLayout, QPushButton, QHBoxLayout, QComboBox, QDialog, QStackedWidget, QMessageBox, QDesktopWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QProgressDialog, QFileDialog, QApplication, QWidget, QLabel, QFrame, QHBoxLayout, QPushButton, QHBoxLayout, QComboBox, QDialog, QStackedWidget, QMessageBox, QDesktopWidget, QTableWidgetItem
 from PyQt5 import QtCore
 from PyQt5.uic import loadUi
 from PyQt5.QtGui import QIcon, QColor
@@ -117,15 +117,11 @@ class PopupDialog(QDialog):
                 self.populate_edit_fields(first_client_name)  # Load data for the first client
         if GlobalState.num == 16:
             self.stackedWidget.setCurrentIndex(16)
-            self.setFixedSize(1050,600)
-            print("chamaaa")
+            self.setFixedSize(1100,600)
             self.populate_comboboxes()
-            print("est")
             self.load_dashboard_data()
-            print("chama")
             self.update_dashboard_graph()
             self.setup_dashboard_filters()
-            print("hmm")
         if GlobalState.num == 17:
             self.stackedWidget.setCurrentIndex(17)
             self.setFixedSize(950, 550)
@@ -670,38 +666,40 @@ class PopupDialog(QDialog):
         new_dialog.average_data_list_btn.setChecked(True)
         new_dialog.stackedWidget.setCurrentIndex(8)
 
-        # Fetch data grouped by hardware with averages and item counts
-        hardware_averages = supply_management_function.fetch_average_item_prices_by_hardware(GlobalState.temp_list)
+        # Fetch full and partial matches
+        full_matches, partial_matches = supply_management_function.fetch_average_item_prices_by_hardware(
+            GlobalState.temp_list)
 
-        # Populate the table with sorted data
-        hardware_averages.sort(key=lambda x: x["average_price"])  # Sort by average price (ascending)
+        # Sort full matches by total price
+        full_matches.sort(key=lambda x: x["total_price"])
+
+        # Sort partial matches by number of matched items (desc), then by total price (asc)
+        partial_matches.sort(key=lambda x: (-len(x["matched_items"]), x["total_price"]))
+
+        # Combine results
+        hardware_averages = full_matches + partial_matches
+
         total_sum = 0
         new_dialog.average_data_list_table.setRowCount(len(hardware_averages))
 
         for row_index, data in enumerate(hardware_averages):
-            total_price = data["total_price"]  # Total price remains unchanged
+            total_price = data["total_price"]
             average_price = data["average_price"]
-            item_count = data["unique_item_count"]  # Updated to reflect unique items
             hardware_name = data["hardware_name"]
             hardware_location = data["hardware_location"]
             hardware_contactInfo = data["hardware_contactInfo"]
 
             # Update the table
-            new_dialog.average_data_list_table.setItem(row_index, 0, QTableWidgetItem(str(row_index + 1)))  # Rank
-            new_dialog.average_data_list_table.setItem(row_index, 1,QTableWidgetItem(f"{average_price:.2f}"))  # Average Price
-            new_dialog.average_data_list_table.setItem(row_index, 2, QTableWidgetItem(f"{total_price:.2f}"))  # Total Price
-            new_dialog.average_data_list_table.setItem(row_index, 3, QTableWidgetItem(hardware_name))  # Hardware Name
-            new_dialog.average_data_list_table.setItem(row_index, 4, QTableWidgetItem(hardware_location))  # Location
-            new_dialog.average_data_list_table.setItem(row_index, 5,QTableWidgetItem(hardware_contactInfo))  # Contact Info
+            new_dialog.average_data_list_table.setItem(row_index, 0, QTableWidgetItem(str(row_index + 1)))
+            new_dialog.average_data_list_table.setItem(row_index, 1, QTableWidgetItem(f"{average_price:.2f}"))
+            new_dialog.average_data_list_table.setItem(row_index, 2, QTableWidgetItem(f"{total_price:.2f}"))
+            new_dialog.average_data_list_table.setItem(row_index, 3, QTableWidgetItem(hardware_name))
+            new_dialog.average_data_list_table.setItem(row_index, 4, QTableWidgetItem(hardware_location))
+            new_dialog.average_data_list_table.setItem(row_index, 5, QTableWidgetItem(hardware_contactInfo))
 
-            total_sum += total_price  # Update total price sum
+            total_sum += total_price
 
-        # Set vertical headers to row numbers
-        for row_index in range(new_dialog.average_data_list_table.rowCount()):
-            new_dialog.average_data_list_table.setVerticalHeaderItem(row_index,
-                                                                     QTableWidgetItem("  " + str(row_index + 1)))
-
-        new_dialog.exec_()  # Display the dialog
+        new_dialog.exec_()
 
     def item_list_data_page(self):
         """
@@ -1675,7 +1673,6 @@ class PopupDialog(QDialog):
             self.dashboard_bookkeeping_services_table.setCellWidget(row_index, 3, status_widget)
 
 
-
     def get_status_color(self, status):
         """
         Maps a status to a corresponding color.
@@ -2298,6 +2295,8 @@ class MainWindow(QDialog):
             self.setEnabled(True)
 
             bookkeeping_function.bookkeeping_data_cache.clear()  # Clear the cache
+            self.loadBookkeepingData()
+            self.applyBookkeepingFilters()
             GlobalState.dash_num = 1
         else:
             self.main_stackedWidget.setCurrentIndex(2)
@@ -2649,6 +2648,8 @@ class MainWindow(QDialog):
         self.setEnabled(True)
 
         bookkeeping_function.bookkeeping_data_cache.clear()  # Clear the cache
+        self.loadBookkeepingData()
+        self.applyBookkeepingFilters()
     def open_client_added_dialog(self):
         # Disable main window
         self.setEnabled(False)
