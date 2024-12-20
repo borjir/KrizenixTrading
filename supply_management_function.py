@@ -243,14 +243,14 @@ def fetch_items_for_category(category):
         print(f"Error fetching items for category '{category}': {e}")
         return []
 
-def fetch_total_item_prices_by_hardware(temp_list):
+def fetch_average_item_prices_by_hardware(temp_list):
     try:
         collection = Database.get_collection("myDB", "item")
 
         # Map quantities from temp_list
         qty_map = {item["item_name"]: item["quantity"] for item in temp_list}
 
-        # Fetch all items matching categories and names in temp_list
+        # Fetch items matching temp_list categories and names
         items = list(collection.find({
             "category": {"$in": [item["category"] for item in temp_list]},
             "item_name": {"$in": [item["item_name"] for item in temp_list]}
@@ -263,35 +263,43 @@ def fetch_total_item_prices_by_hardware(temp_list):
             "hardware_contactInfo": 1
         }))
 
-        # Compute total prices grouped by hardware
-        hardware_totals = {}
+        # Group items by hardware and calculate averages and counts
+        hardware_data = {}
         for item in items:
             hardware_name = item["hardware_name"]
-            total_price = item["item_price"] * qty_map.get(item["item_name"], 0)
+            quantity = qty_map.get(item["item_name"], 0)
+            total_price = item["item_price"] * quantity
 
-            if hardware_name not in hardware_totals:
-                hardware_totals[hardware_name] = {
+            if hardware_name not in hardware_data:
+                hardware_data[hardware_name] = {
                     "total_price": 0,
+                    "unique_items": set(),
                     "hardware_location": item["hardware_location"],
                     "hardware_contactInfo": item["hardware_contactInfo"]
                 }
 
-            hardware_totals[hardware_name]["total_price"] += total_price
+            hardware_data[hardware_name]["total_price"] += total_price
+            hardware_data[hardware_name]["unique_items"].add(item["item_name"])
 
-        # Convert to list for further processing
-        return [
-            {
-                "hardware_name": hardware,
+        # Compute averages for each hardware
+        result = []
+        for hardware_name, data in hardware_data.items():
+            average_price = (data["total_price"] / len(data["unique_items"])) if data["unique_items"] else 0
+            result.append({
+                "hardware_name": hardware_name,
                 "total_price": data["total_price"],
+                "average_price": average_price,
+                "unique_item_count": len(data["unique_items"]),
                 "hardware_location": data["hardware_location"],
                 "hardware_contactInfo": data["hardware_contactInfo"]
-            }
-            for hardware, data in hardware_totals.items()
-        ]
+            })
+
+        return result
 
     except Exception as e:
-        print(f"Error fetching total item prices by hardware: {e}")
+        print(f"Error fetching average item prices by hardware: {e}")
         return []
+
 
 
 

@@ -657,7 +657,7 @@ class PopupDialog(QDialog):
 
     def average_list_data(self):
         if not GlobalState.temp_list:
-            QMessageBox.warning(self,"Error","The list is empty. Please add items before confirming.")
+            QMessageBox.warning(self, "Error", "The list is empty. Please add items before confirming.")
             return
 
         GlobalState.num = 1
@@ -670,28 +670,31 @@ class PopupDialog(QDialog):
         new_dialog.average_data_list_btn.setChecked(True)
         new_dialog.stackedWidget.setCurrentIndex(8)
 
-        # Fetch total prices
-        total_prices_by_hardware = supply_management_function.fetch_total_item_prices_by_hardware(GlobalState.temp_list)
-        total_prices_by_hardware.sort(key=lambda x: x["total_price"])  # Sort by total price
+        # Fetch data grouped by hardware with averages and item counts
+        hardware_averages = supply_management_function.fetch_average_item_prices_by_hardware(GlobalState.temp_list)
 
-        # Populate the table
+        # Populate the table with sorted data
+        hardware_averages.sort(key=lambda x: x["average_price"])  # Sort by average price (ascending)
         total_sum = 0
-        new_dialog.average_data_list_table.setRowCount(len(total_prices_by_hardware))
-        for row_index, data in enumerate(total_prices_by_hardware):
-            total_price = data["total_price"]
+        new_dialog.average_data_list_table.setRowCount(len(hardware_averages))
+
+        for row_index, data in enumerate(hardware_averages):
+            total_price = data["total_price"]  # Total price remains unchanged
+            average_price = data["average_price"]
+            item_count = data["unique_item_count"]  # Updated to reflect unique items
             hardware_name = data["hardware_name"]
             hardware_location = data["hardware_location"]
             hardware_contactInfo = data["hardware_contactInfo"]
 
             # Update the table
-            new_dialog.average_data_list_table.setItem(row_index, 0, QTableWidgetItem(str(row_index + 1)))
-            new_dialog.average_data_list_table.setItem(row_index, 1, QTableWidgetItem(f"{total_price:.2f}"))
-            new_dialog.average_data_list_table.setItem(row_index, 2, QTableWidgetItem(hardware_name))
-            new_dialog.average_data_list_table.setItem(row_index, 3, QTableWidgetItem(hardware_location))
-            new_dialog.average_data_list_table.setItem(row_index, 4, QTableWidgetItem(hardware_contactInfo))
+            new_dialog.average_data_list_table.setItem(row_index, 0, QTableWidgetItem(str(row_index + 1)))  # Rank
+            new_dialog.average_data_list_table.setItem(row_index, 1,QTableWidgetItem(f"{average_price:.2f}"))  # Average Price
+            new_dialog.average_data_list_table.setItem(row_index, 2, QTableWidgetItem(f"{total_price:.2f}"))  # Total Price
+            new_dialog.average_data_list_table.setItem(row_index, 3, QTableWidgetItem(hardware_name))  # Hardware Name
+            new_dialog.average_data_list_table.setItem(row_index, 4, QTableWidgetItem(hardware_location))  # Location
+            new_dialog.average_data_list_table.setItem(row_index, 5,QTableWidgetItem(hardware_contactInfo))  # Contact Info
 
-            # Accumulate the total for all hardware
-            total_sum += total_price
+            total_sum += total_price  # Update total price sum
 
         # Set vertical headers to row numbers
         for row_index in range(new_dialog.average_data_list_table.rowCount()):
@@ -913,7 +916,7 @@ class PopupDialog(QDialog):
         reply = QMessageBox.question(
             self,
             "Confirm PDF Conversion",
-            f"Are you sure you want to generate the PDF named '{file_name}'?",
+            f"Are you sure you want to generate the PDF named '{file_name}' in '{self.pdf_save_directory}'?",
             QMessageBox.Yes | QMessageBox.No,
             QMessageBox.No
         )
@@ -976,8 +979,8 @@ class PopupDialog(QDialog):
 
             # Add TOTAL COST table
             total_cost_data = self.get_average_data_list_table()
-            total_cost_col_widths = [75, 75, 130, 130, 130]  # Adjust as needed
-            add_table_with_title("CHEAPEST TOTAL COST", total_cost_data, total_cost_col_widths)
+            total_cost_col_widths = [65, 65, 65, 130, 130, 130]  # Adjust as needed
+            add_table_with_title("CHEAPEST TOTAL COST BY AVERAGE", total_cost_data, total_cost_col_widths)
 
             elements.append(Spacer(1, 15))
 
@@ -1020,7 +1023,7 @@ class PopupDialog(QDialog):
         total_cost_data = []
 
         # Add the header row
-        total_cost_data.append(["RANK", "TOTAL PRICE", "HARDWARE NAME", "LOCATION", "CONTACT INFO"])
+        total_cost_data.append(["RANK", "AVG PRICE", "OVR PRICE", "HARDWARE NAME", "LOCATION", "CONTACT INFO"])
 
         # Determine the number of rows to fetch (max 5)
         max_rows = min(self.average_data_list_table.rowCount(), 5)
@@ -1028,13 +1031,14 @@ class PopupDialog(QDialog):
         # Process each row in the average_data_list_table up to max_rows and add the rank
         for row in range(max_rows):
             rank = row + 1  # Generate rank starting from 1
-            total_price = self.average_data_list_table.item(row, 1).text()
-            hardware_name = self.average_data_list_table.item(row, 2).text()
-            location = self.average_data_list_table.item(row, 3).text()
-            contact_info = self.average_data_list_table.item(row, 4).text()
+            avg_price = self.average_data_list_table.item(row, 1).text()
+            total_price = self.average_data_list_table.item(row, 2).text()
+            hardware_name = self.average_data_list_table.item(row, 3).text()
+            location = self.average_data_list_table.item(row, 4).text()
+            contact_info = self.average_data_list_table.item(row, 5).text()
 
             # Append the row data with rank
-            total_cost_data.append([rank, total_price, hardware_name, location, contact_info])
+            total_cost_data.append([rank, avg_price, total_price, hardware_name, location, contact_info])
 
         return total_cost_data
 
@@ -2100,7 +2104,7 @@ class MainWindow(QDialog):
 
                 # Set the appropriate dialog view
                 dialog.stackedWidget.setCurrentIndex(4)  # Assuming index 4 is the details view
-                dialog.setFixedSize(800, 600)
+                dialog.setFixedSize(900, 600)
 
                 # Display the dialog
                 dialog.exec_()

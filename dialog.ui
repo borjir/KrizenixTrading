@@ -135,7 +135,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>8</number>
      </property>
      <widget class="QWidget" name="page">
       <layout class="QGridLayout" name="gridLayout_2">
@@ -2953,7 +2953,7 @@ background-color: #28a745;
 }</string>
             </property>
             <property name="text">
-             <string>BY TOTAL COST</string>
+             <string>BY AVERAGE</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -3057,7 +3057,7 @@ background-color: #28a745;
        <item>
         <widget class="QStackedWidget" name="list_stackedWidget">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="page_10">
           <layout class="QHBoxLayout" name="horizontalLayout_18">
@@ -3085,7 +3085,7 @@ gridline-color: black;
 font-family: Segoe UI;
 font-weight: bold;
 color: black;
-font-size: 15px;
+font-size: 14px;
 
 	
 }
@@ -3095,7 +3095,7 @@ border: 2px solid black;
 QHeaderView::section{
 background-color: #1353A5;
 border: 2px solid black;
-font: bold 15px Arial, serif;
+font: bold 14px Arial, serif;
 color: rgb(255, 255, 255);
 }
 </string>
@@ -3189,7 +3189,12 @@ color: rgb(255, 255, 255);
              </column>
              <column>
               <property name="text">
-               <string> TOTAL PRICE </string>
+               <string> AVG PRICE</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string> OVR PRICE </string>
               </property>
              </column>
              <column>
