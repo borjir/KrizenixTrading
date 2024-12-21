@@ -35,7 +35,7 @@ from global_state import GlobalState
 class PopupDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        loadUi("dialog.ui", self)  # Load dialog.ui design
+        loadUi("ui_files/dialog.ui", self)  # Load dialog.ui design
 
         #customize
         self.setWindowTitle("Krizenix Trading")
@@ -875,15 +875,15 @@ class PopupDialog(QDialog):
 
     def generate_unique_filename(self):
         """
-        Generate a unique file name using the current date.
-        For example, Report1 (19-12-2024).pdf, Report2 (19-12-2024).pdf.
+        Generate a unique file name with a continuous counter and the current date.
+        For example, Report1 (19-12-2024).pdf, Report2 (19-12-2024).pdf, etc.
         """
-        current_date = datetime.now().strftime("%d-%m-%Y")
+        current_date = datetime.now().strftime("%m-%d-%Y")
         counter = 1
 
         while True:
-            # Construct the file name with the current counter and date
-            file_name = f"Report{counter} ({current_date}).pdf"
+            # Construct the file name with the counter and date
+            file_name = f"({current_date}) Report {counter}).pdf"
             file_path = os.path.join(self.pdf_save_directory, file_name)
 
             # Check if a file with the same name already exists
@@ -936,7 +936,7 @@ class PopupDialog(QDialog):
             elements = []
 
             # Add logo
-            logo_path = "images/KSX_LOGO.png"
+            logo_path = "ui_files/images/KSX_LOGO.png"
             try:
                 logo = Image(logo_path, width=100, height=100)
                 logo.hAlign = "CENTER"
@@ -1731,7 +1731,7 @@ class PopupDialog(QDialog):
 class MainWindow(QDialog):
     def __init__(self):
         super().__init__()
-        loadUi("main_window.ui", self)
+        loadUi("ui_files/main_window.ui", self)
 
         self.setMinimumSize(1020,440)
 
@@ -2037,7 +2037,7 @@ class MainWindow(QDialog):
             button_layout.setSpacing(8)
 
             info_button = QPushButton()
-            info_button.setIcon(QIcon("images/ICON_VIEW.png"))
+            info_button.setIcon(QIcon("ui_files/images/ICON_VIEW.png"))
             info_button.setIconSize(QSize(19, 19))
             info_button.setStyleSheet(button_style.format(
                 bg_color="#28a745", hover_color="#218838", pressed_color="#1e7e34"))
@@ -2048,7 +2048,7 @@ class MainWindow(QDialog):
 
             # Edit Button
             edit_button = QPushButton()
-            edit_button.setIcon(QIcon("images/ICON_EDIT.png"))
+            edit_button.setIcon(QIcon("ui_files/images/ICON_EDIT.png"))
             edit_button.setIconSize(QSize(19, 19))
             edit_button.setStyleSheet(button_style.format(
                 bg_color="#007bff", hover_color="#0056b3", pressed_color="#004085"))
@@ -2364,7 +2364,7 @@ class MainWindow(QDialog):
         Creates a styled action button for bookkeeping_services_table, passing both client_id and payment_type.
         """
         button = QPushButton("")
-        button.setIcon(QIcon("images/ICON_CHANGE.png"))
+        button.setIcon(QIcon("ui_files/images/ICON_CHANGE.png"))
         button.setIconSize(QSize(19, 19))
         button.setFixedSize(33, 23)
         button.setCursor(Qt.PointingHandCursor)
@@ -2752,7 +2752,7 @@ class MainWindow(QDialog):
 
                 # Edit Button
                 edit_button = QPushButton()
-                edit_button.setIcon(QIcon("images/ICON_EDIT.png"))
+                edit_button.setIcon(QIcon("ui_files/images/ICON_EDIT.png"))
                 edit_button.setIconSize(QSize(19, 19))
                 edit_button.setStyleSheet(button_style.format(
                     bg_color="#007bff", hover_color="#0056b3", pressed_color="#004085"))
@@ -2763,7 +2763,7 @@ class MainWindow(QDialog):
 
                 # Delete Button
                 delete_button = QPushButton()
-                delete_button.setIcon(QIcon("images/ICON_DELETE.png"))
+                delete_button.setIcon(QIcon("ui_files/images/ICON_DELETE.png"))
                 delete_button.setIconSize(QSize(19, 19))
                 delete_button.setStyleSheet(button_style.format(
                     bg_color="#f44336", hover_color="#aa2e25", pressed_color="#661b16"))
@@ -2891,7 +2891,7 @@ class MainWindow(QDialog):
 class Login(QDialog):
     def __init__(self):
         super().__init__()
-        loadUi("login.ui", self)
+        loadUi("ui_files/login.ui", self)
 
         # Check account existence on startup
         if check_account_existence():
