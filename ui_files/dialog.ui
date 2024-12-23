@@ -135,7 +135,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>16</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page">
       <layout class="QGridLayout" name="gridLayout_2">
@@ -261,7 +261,7 @@ border-color: white;
 border-width: 0px;</string>
                </property>
                <property name="text">
-                <string>Contact Info:</string>
+                <string>Contact No.:</string>
                </property>
               </widget>
              </item>
@@ -1764,7 +1764,7 @@ border-color: white;
 border-width: 0px;</string>
                </property>
                <property name="text">
-                <string>Hardware Contact Info:</string>
+                <string>Hardware Contact No.:</string>
                </property>
               </widget>
              </item>
@@ -3057,7 +3057,7 @@ background-color: #28a745;
        <item>
         <widget class="QStackedWidget" name="list_stackedWidget">
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="page_10">
           <layout class="QHBoxLayout" name="horizontalLayout_18">
@@ -3209,7 +3209,7 @@ color: rgb(255, 255, 255);
              </column>
              <column>
               <property name="text">
-               <string> CONTACT INFO </string>
+               <string> CONTACT NO. </string>
               </property>
              </column>
             </widget>
@@ -4144,7 +4144,7 @@ color: rgb(255, 255, 255);
          </column>
          <column>
           <property name="text">
-           <string> CONTACT INFO </string>
+           <string> CONTACT NO. </string>
           </property>
          </column>
          <column>
@@ -4638,7 +4638,7 @@ border-color: white;
 border-width: 0px;</string>
                </property>
                <property name="text">
-                <string>Contact Info:</string>
+                <string>Contact No.:</string>
                </property>
               </widget>
              </item>
@@ -7563,7 +7563,7 @@ border-color: white;
 border-width: 0px;</string>
             </property>
             <property name="text">
-             <string>Contact Info:</string>
+             <string>Contact No.:</string>
             </property>
            </widget>
           </item>
@@ -10691,7 +10691,7 @@ color: rgb(255, 255, 255);
          </column>
          <column>
           <property name="text">
-           <string> CONTACT INFO </string>
+           <string> CONTACT NO. </string>
           </property>
          </column>
          <column>

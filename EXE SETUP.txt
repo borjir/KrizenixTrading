@@ -1,4 +1,4 @@
-pyinstaller --onefile --windowed --add-data "ui_files;ui_files" --name "Krizenix Trading" --icon "ui_files/images/KSX_LOGO.ico" main.py
+pyinstaller --onefile --windowed --add-data "images;images" --name "Krizenix Trading" --icon "images/KSX_LOGO.ico" main.py
 
 
 # -*- mode: python ; coding: utf-8 -*-
@@ -10,7 +10,7 @@ a = Analysis(
     pathex=['.'],  # Path to the project root
     binaries=[],
     datas=[
-        ('ui_files', 'ui_files'),  # Bundle the images folder
+        ('images', 'images'),  # Bundle the images folder
     ],
     hiddenimports=[],
     hookspath=[],
@@ -36,7 +36,7 @@ exe = EXE(
     strip=False,
     upx=True,
     console=False,  # No console window
-    icon='ui_files/images/KSX_LOGO.ico',  # Application icon
+    icon='images/KSX_LOGO.ico',  # Application icon
 )
 
 coll = COLLECT(

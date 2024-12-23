@@ -883,7 +883,7 @@ class PopupDialog(QDialog):
 
         while True:
             # Construct the file name with the counter and date
-            file_name = f"({current_date}) Report {counter}).pdf"
+            file_name = f"({current_date}) Report {counter}.pdf"
             file_path = os.path.join(self.pdf_save_directory, file_name)
 
             # Check if a file with the same name already exists
@@ -1748,17 +1748,19 @@ class MainWindow(QDialog):
         # role
         if GlobalState.role_num == 0:
             self.main_stackedWidget.setCurrentIndex(0)
+            self.dashboard_tab_btn.setChecked(True)
             customize.toggled_admin(self)
         if GlobalState.role_num == 1:
             self.main_stackedWidget.setCurrentIndex(1)
+            self.supply_management_tab_btn.setChecked(True)
             customize.toggled_supply_mgmt(self)
         if GlobalState.role_num == 2:
             self.main_stackedWidget.setCurrentIndex(2)
+            self.bookkeeping_tab_btn.setChecked(True)
             customize.toggled_bookkeeping(self)
         #toggled
         self.toggle_btn.clicked.connect(self.toggled)
         #---dashboard----#
-        self.dashboard_tab_btn.setChecked(True)
         self.dashboard_tab_btn.clicked.connect(self.dashboard_page)
         self.new_hardware_added_btn.clicked.connect(self.hardwares_added_popup)
         self.prices_updated_btn.clicked.connect(self.items_updated_popup)
@@ -3113,7 +3115,7 @@ if __name__ == "__main__":
     widget.addWidget(login)
     widget.setMinimumSize(800, 600)
     widget.setWindowTitle("Krizenix Trading")
-    widget.setWindowIcon(QIcon('images/KSX_LOGO.png'))
+    widget.setWindowIcon(QIcon('ui_files/images/KSX_LOGO.png'))
 
     # Show maximized on start
     def show_maximized():

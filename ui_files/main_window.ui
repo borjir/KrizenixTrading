@@ -1953,7 +1953,7 @@ color: rgb(255, 255, 255);
                </column>
                <column>
                 <property name="text">
-                 <string> CONTACT INFO </string>
+                 <string> CONTACT NO. </string>
                 </property>
                </column>
                <column>
@@ -2768,13 +2768,13 @@ font-size: 9.5pt;
               <widget class="QComboBox" name="paymentStatusBox">
                <property name="minimumSize">
                 <size>
-                 <width>150</width>
+                 <width>165</width>
                  <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>150</width>
+                 <width>165</width>
                  <height>30</height>
                 </size>
                </property>
@@ -2951,7 +2951,7 @@ color: rgb(255, 255, 255);
             </column>
             <column>
              <property name="text">
-              <string> CONTACT INFO </string>
+              <string> CONTACT NO. </string>
              </property>
             </column>
             <column>

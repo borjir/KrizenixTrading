@@ -7,7 +7,7 @@ a = Analysis(
     pathex=['.'],  # Path to the project root
     binaries=[],
     datas=[
-        ('ui_files', 'ui_files'),  # Bundle the images folder
+        ('images', 'images'),  # Bundle the images folder
     ],
     hiddenimports=[],
     hookspath=[],
@@ -33,7 +33,7 @@ exe = EXE(
     strip=False,
     upx=True,
     console=False,  # No console window
-    icon='ui_files/images/KSX_LOGO.ico',  # Application icon
+    icon='images/KSX_LOGO.ico',  # Application icon
 )
 
 coll = COLLECT(
